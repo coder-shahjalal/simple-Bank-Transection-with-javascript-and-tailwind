@@ -1,56 +1,63 @@
-function convertNumberAndSum(e) {
-  const convertNumber = parseFloat(e);
-  return convertNumber;
+//.......................Input Amount function ......
+function amountTotal(inputData) {
+  const InputAmount = document.getElementById(inputData);
+  const InputAmountText = InputAmount.value;
+  const previusInputValue = parseFloat(InputAmountText);
+  InputAmount.value = "";
+  return previusInputValue;
+}
+
+//......................... Input Amount display function
+
+function amountInputDisplay(inputID, inputAmount) {
+  const currentAmount = document.getElementById(inputID);
+  const currentAmountText = currentAmount.innerText;
+  const amountNumberTotal = parseFloat(currentAmountText);
+  const totalAmount = amountNumberTotal + inputAmount;
+  currentAmount.innerText = totalAmount;
+}
+
+//,,,,,,,,,,,, balance error amount handle
+function currentBalance() {
+  const balanceDisplay = document.getElementById("balance-input-display");
+  const balanceAmountText = balanceDisplay.innerText;
+  const balanceAmount = parseFloat(balanceAmountText);
+  return balanceAmount;
+}
+//.............balance update
+function balanceTotal(amount, isAdd) {
+  const balanceDisplay = document.getElementById("balance-input-display");
+  const balanceAmount = currentBalance();
+  if (isAdd == true) {
+    const balanceAmountTotal = balanceAmount + amount;
+    balanceDisplay.innerText = balanceAmountTotal;
+  } else {
+    const balanceAmountTotal = balanceAmount - amount;
+    balanceDisplay.innerText = balanceAmountTotal;
+  }
 }
 
 // Deposite
 document
   .getElementById("deposit-button")
   .addEventListener("click", function () {
-    const depositInput = document.getElementById("deposit-input");
-    const depositInputText = depositInput.value;
-    const depositInputValue = convertNumberAndSum(depositInputText);
-    console.log(depositInputValue);
+    const depositInputValue = amountTotal("deposit-input"); //.............
+    if (depositInputValue > 0) {
+      amountInputDisplay("deposit-input-display", depositInputValue);
 
-    const depositTotalc = document.getElementById("deposit-input-display");
-    const currentDepositText = depositTotalc.innerText;
-    const depositTotal = convertNumberAndSum(currentDepositText);
-    const totalDepositAmount = depositTotal + depositInputValue;
-    depositTotalc.innerText = totalDepositAmount;
-    console.log(totalDepositAmount);
-
-    depositInput.value = "";
-    //   update Acount deposite balance
-    const balanceDisplay = document.getElementById("balance-input-display");
-    const balanceAmountText = balanceDisplay.innerText;
-    const balanceAmount = convertNumberAndSum(balanceAmountText);
-    const balanceAmountTotal = balanceAmount + depositInputValue;
-    balanceDisplay.innerText = balanceAmountTotal;
+      //   update Acount deposite balance
+      balanceTotal(depositInputValue, true);
+    }
   });
 
-//   update Account withdraw
-// withdraw Button
+//   update Acount withdraw balance
 document
   .getElementById("withdraw-button")
   .addEventListener("click", function () {
-    const withdrawInput = document.getElementById("withdraw-input");
-    const withdrawInputText = withdrawInput.value;
-    const withdrawAmount = convertNumberAndSum(withdrawInputText);
-    console.log(withdrawAmount);
-    //withdraw  data show area
-    const currentWithdrawAmount = document.getElementById(
-      "withdraw-input-display"
-    );
-    const currentWithdrawText = currentWithdrawAmount.innerText;
-    const CurrentWithdrawAmount = convertNumberAndSum(currentWithdrawText);
-    const withdrawTotal = withdrawAmount + CurrentWithdrawAmount;
-    currentWithdrawAmount.innerText = withdrawTotal;
-    withdrawInput.value = "";
-
-    //   update Acount withdraw balance
-    const balanceDisplay = document.getElementById("balance-input-display");
-    const balanceAmountText = balanceDisplay.innerText;
-    const balanceAmount = convertNumberAndSum(balanceAmountText);
-    const balanceAmountTotal = balanceAmount - withdrawAmount;
-    balanceDisplay.innerText = balanceAmountTotal;
+    const withdrawAmount = amountTotal("withdraw-input");
+    const currentBalanceAmount = currentBalance();
+    if (withdrawAmount > 0 && withdrawAmount <= currentBalanceAmount) {
+      amountInputDisplay("withdraw-input-display", withdrawAmount);
+      balanceTotal(withdrawAmount, false);
+    }
   });
